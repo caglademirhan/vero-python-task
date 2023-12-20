@@ -59,11 +59,11 @@ $ python server.py
 $ python client.py
 ```
 ### Dependencies
-Flask
-pandas
-requests
-openpyxl
-flask-cors
+- Flask
+- pandas
+- requests
+- openpyxl
+- flask-cors
 
 
 
