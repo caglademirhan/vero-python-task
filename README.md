@@ -1,3 +1,91 @@
+# Vero Digital Python Task
+
+This project consists of a client-side script (`try_cli.py`) and a server-side script (`try.py`) that together achieve the following tasks:
+
+## Task Description
+
+### Client Side
+
+The client-side script is responsible for transmitting a CSV file to a REST API, handling the response, and generating an Excel file based on specified input parameters.
+
+#### Input Parameters
+
+- `-k/--keys`: A parameter that can receive an arbitrary number of string arguments.
+- `-c/--colored`: A boolean flag that defaults to True.
+
+#### Steps
+
+1. Transmit the CSV file containing vehicle information to the server.
+2. Convert the server's response into an Excel file with the following criteria:
+   - Rows are sorted by the `gruppe` field.
+   - Columns always contain the `rnr` field.
+   - Only keys that match the input arguments are considered as additional columns.
+   - If `labelIds` are given and at least one colorCode could be resolved, use the first colorCode to tint the cell's text.
+   - If the `-c` flag is True, color each row based on the following logic:
+     - If `hu` is not older than 3 months, color the row green (#007500).
+     - If `hu` is not older than 12 months, color the row orange (#FFA500).
+     - If `hu` is older than 12 months, color the row red (#b30000).
+   - The file should be named `vehicles_{current_date_iso_formatted}.xlsx`.
+
+### Server Side
+
+The server-side script offers a REST API using Flask. It accepts a transmitted CSV containing vehicle information, fetches resources from an external API, applies filtering, and returns the result in an appropriate data structure.
+
+#### Steps
+
+1. Authenticate the request towards the [Baubuddy API](https://api.baubuddy.de) using the provided credentials.
+2. Accept a transmitted CSV file in a POST call to `/api/upload`.
+3. Request resources from `https://api.baubuddy.de/dev/index.php/v1/vehicles/select/active`.
+4. Store and merge the API response with the CSV data.
+5. Filter out resources that do not have a value set for the `hu` field.
+6. For each `labelId` in the vehicle's JSON array `labelIds`, resolve its colorCode using `https://api.baubuddy.de/dev/index.php/v1/labels/{labelId}`.
+7. Return the data structure in JSON format.
+
+## Usage
+
+### Client Side
+
+```bash
+python try_cli.py -k kurzname info -c 
+```
+
+### Run server.py
+```
+$ python server.py
+```
+
+### Open another terminal and run client.py
+```
+$ python client.py
+```
+### Dependencies
+Flask
+pandas
+requests
+openpyxl
+flask-cors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Hello dear python dev!
 
 This repository is supposed to act as a playground for your submission.
